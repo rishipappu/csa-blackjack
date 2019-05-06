@@ -31,17 +31,8 @@ public class Blackjack {
         player2.add(deck.deal());
     }
 
-    public void dealBoth() {
-        player1.add(deck.deal());
-        player2.add(deck.deal());
-    }
-
-    public void dealP1() {
-        player1.add(deck.deal());
-    }
-
-    public void dealP2() {
-        player2.add(deck.deal());
+    public void dealHand(List<Card> hand) {
+        hand.add(deck.deal());
     }
 
     public List<Card> getP1() {
@@ -52,20 +43,66 @@ public class Blackjack {
         return player2;
     }
 
-    public boolean check21(List<Card> hand) {
+    public int sumHand(List<Card> hand) {
         int sum = 0;
-        for (Card card : hand) {
-            sum += card.pointValue();
+        for (int i = 0; i < hand.size(); i++) {
+            sum += hand.get(i).pointValue();
         }
-        if (sum > 21) {
+        return sum;
+    }
+
+    public int changeAce(List<Card> hand) {
+        int aceValue = 1;
+        for (int i = 0; i < hand.size() - 1; i++) {
+            Card currentCard = hand.get(i);
+            if (currentCard.rank().equals("ace") && currentCard.pointValue() == 10) {
+                currentCard.setPointValue(1);
+                aceValue = 1;
+            } else if (currentCard.rank().equals("ace") && currentCard.pointValue() == 1) {
+                currentCard.setPointValue(10);
+                aceValue = 10;
+            }
+        }
+        return aceValue;
+    }
+
+    public int getAceValue(List<Card> hand) {
+        int aceValue = 1;
+        for (int i = 0; i < hand.size() - 1; i++) {
+            Card currentCard = hand.get(i);
+            if (currentCard.rank().equals("ace") && currentCard.pointValue() == 10) {
+                aceValue = 1;
+            } else if (currentCard.rank().equals("ace") && currentCard.pointValue() == 1) {
+                aceValue = 10;
+            }
+        }
+        return aceValue;
+    }
+
+    public boolean check21(List<Card> hand) {
+        if (sumHand(hand) < 21) {
+            return true;
+        } else if (sumHand(hand) > 21) {
             return false;
         } else {
             return true;
         }
     }
 
-    public boolean checkGameStatus() {
-
-        return true;
+    public String gameCheck() {
+        if (check21(player1) && check21(player2)) {
+            return "You Win";
+        } else if ((check21(player1) == false) && (check21(player2) == true)) {
+            return "You Win";
+        } else {
+            return "You Lose!";
+        }
     }
+
+    public void dealP1() {
+        for (int i = 0; i < (int) Math.random() * 5; i++) {
+            player1.add(deck.deal());
+        }
+    }
+
 }
