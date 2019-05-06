@@ -83,11 +83,11 @@ public class BlackJackGUI {
         p.add(aceValue);
         p.add(gameStatus);
         initialRender(game.getP2());
-        status();
+        status(false);
         while (game.check21(game.getP2())) {
             deal.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    status();
+                    status(false);
                 }
             });
         }
@@ -147,11 +147,15 @@ public class BlackJackGUI {
         f.repaint();
     }
 
-    public void status() {
+    public void status(boolean x) {
         if (game.check21(game.getP2())) {
-            game.dealHand(game.getP2());
-            render(game.getP2());
-            gameStatus.setText(game.gameCheck());
+            if (x) {
+                game.dealHand(game.getP2());
+                render(game.getP2());
+                gameStatus.setText(game.gameCheck());
+            } else {
+                gameStatus.setText(game.gameCheck());
+            }
             f.repaint();
         } else {
             redo.setVisible(true);
